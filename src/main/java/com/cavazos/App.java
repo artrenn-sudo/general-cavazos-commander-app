@@ -30,6 +30,7 @@ public class App {
 
         Random rand = new Random();
         Stack<String> undoStack = new Stack<>();
+        Stack<String> redoStack = new Stack<>();
 
         while (running) {
             printMenu();
@@ -41,16 +42,29 @@ public class App {
                     int randIndex = rand.nextInt(commandArray.length);
                     String command = commandArray[randIndex];
                     undoStack.push(command);
+                    redoStack.clear();
                     System.out.println("Issued: " + command);
                     break;
                 case "l":
                     Cavazos.print(commandArray);
                     break;
                 case "u":
-                    System.out.println("Undo command - not yet implemented");
+                    if (undoStack.isEmpty()) {
+                        System.out.println("No commands to undo.");
+                    } else {
+                        String undone = undoStack.pop();
+                        redoStack.push(undone);
+                        System.out.println("Undone: " + undone);
+                    }
                     break;
                 case "r":
-                    System.out.println("Redo command - not yet implemented");
+                    if (redoStack.isEmpty()) {
+                        System.out.println("No commands to redo.");
+                    } else {
+                        String redone = redoStack.pop();
+                        undoStack.push(redone);
+                        System.out.println("Redone: " + redone);
+                    }
                     break;
                 case "q":
                     running = false;

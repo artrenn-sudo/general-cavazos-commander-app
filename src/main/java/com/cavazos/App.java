@@ -8,18 +8,19 @@ import org.json.simple.*;
 
 public class App {
 
+    private static final String LINE = "--------------------------------------------------------------";
     // Display the menu
     public static void printMenu() {
-        System.out.println("--------------------------------------------------------------");
+        System.out.println(LINE);
         System.out.println("General Cavazos Commander App");
-        System.out.println("--------------------------------------------------------------");
+        System.out.println(LINE);
         System.out.println("i\tIssue a command");
         System.out.println("l\tList all of the commands");
         System.out.println("u\tUndo the last command that was issued");
         System.out.println("r\tRedo the last command that was issued");
         System.out.println("m\tShow menu");
         System.out.println("q\tQuit");
-        System.out.println("--------------------------------------------------------------");
+        System.out.println(LINE);
     }
 
     public static void main(String[] args) {
@@ -40,7 +41,7 @@ public class App {
 
         // Menu loop: exits when user enters 'q'
         do {
-            System.out.print("Enter a command: ");
+            System.out.print("Enter a command or 'm' to show menu: ");
             input = scanner.nextLine().trim().toLowerCase();
 
             switch (input) {
@@ -82,6 +83,7 @@ public class App {
                     System.out.println("Invalid command. Please try again.");
                     break;
             }
+            System.out.println(LINE);
         } while (!input.equals("q"));
 
         scanner.close();

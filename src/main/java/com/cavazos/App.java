@@ -1,6 +1,7 @@
 package com.cavazos;
 
 import java.util.Scanner;
+import org.json.simple.*;
 
 public class App {
 
@@ -21,6 +22,10 @@ public class App {
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
 
+        // Load commands from JSON
+        JSONArray commandJSONArray = JSONFile.readArray("commands.json");
+        String[] commandArray = Cavazos.getCommandArray(commandJSONArray);
+
         while (running) {
             printMenu();
             System.out.print("Enter a command: ");
@@ -31,7 +36,7 @@ public class App {
                     System.out.println("Issue command - not yet implemented");
                     break;
                 case "l":
-                    System.out.println("List command - not yet implemented");
+                    Cavazos.print(commandArray);
                     break;
                 case "u":
                     System.out.println("Undo command - not yet implemented");
@@ -40,7 +45,8 @@ public class App {
                     System.out.println("Redo command - not yet implemented");
                     break;
                 case "q":
-                    System.out.println("Quit - not yet implemented");
+                    running = false;
+                    System.out.println("Goodbye, General!");
                     break;
                 default:
                     System.out.println("Invalid command. Please try again.");

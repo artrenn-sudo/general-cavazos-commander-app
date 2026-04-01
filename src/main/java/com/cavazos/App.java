@@ -65,13 +65,14 @@ public class App {
         JSONArray commandJSONArray = JSONFile.readArray("commands.json");
         String[] commandArray = Cavazos.getCommandArray(commandJSONArray);
 
+        boolean userQuit = false;
         String input;
 
         // Show menu once at startup
         printMenu();
 
         // Menu loop
-        do {
+        while (!userQuit) {
             System.out.print("Enter a command or 'm' to show menu: ");
             input = scanner.nextLine().trim().toLowerCase();
 
@@ -93,13 +94,14 @@ public class App {
                     break;
                 case "q":
                     System.out.println("Goodbye, General!");
+                    userQuit = true;
                     break;
                 default:
                     System.out.println("Invalid command. Please try again.");
                     break;
             }
             System.out.println(line);
-        } while (!input.equals("q"));
+        }
 
         scanner.close();
     }

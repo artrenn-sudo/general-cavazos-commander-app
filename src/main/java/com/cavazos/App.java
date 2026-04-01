@@ -8,19 +8,54 @@ import org.json.simple.*;
 
 public class App {
 
-    private static final String LINE = "--------------------------------------------------------------";
+    private static final String line = "--------------------------------------------------------------";
+    private static final Random rand = new Random();
+    private static Deque<String> undoStack = new ArrayDeque<>();
+    private static Deque<String> redoStack = new ArrayDeque<>();
+
     // Display the menu
     public static void printMenu() {
-        System.out.println(LINE);
+        System.out.println(line);
         System.out.println("General Cavazos Commander App");
-        System.out.println(LINE);
+        System.out.println(line);
         System.out.println("i\tIssue a command");
         System.out.println("l\tList all of the commands");
         System.out.println("u\tUndo the last command that was issued");
         System.out.println("r\tRedo the last command that was issued");
         System.out.println("m\tShow menu");
         System.out.println("q\tQuit");
-        System.out.println(LINE);
+        System.out.println(line);
+    }
+
+    // Issue a random command
+    public static void issueCommand(String[] commandArray) {
+        int randIndex = rand.nextInt(commandArray.length);
+        String command = commandArray[randIndex];
+        undoStack.push(command);
+        redoStack.clear();
+        System.out.println("Issued: " + command);
+    }
+
+    // Undo the last issued command
+    public static void undoCommand() {
+        if (undoStack.isEmpty()) {
+            System.out.println("No commands to undo.");
+        } else {
+            String undone = undoStack.pop();
+            redoStack.push(undone);
+            System.out.println("Undone: " + undone);
+        }
+    }
+
+    // Redo the last undone command
+    public static void redoCommand() {
+        if (redoStack.isEmpty()) {
+            System.out.println("No commands to redo.");
+        } else {
+            String redone = redoStack.pop();
+            undoStack.push(redone);
+            System.out.println("Redone: " + redone);
+        }
     }
 
     public static void main(String[] args) {
@@ -30,48 +65,28 @@ public class App {
         JSONArray commandJSONArray = JSONFile.readArray("commands.json");
         String[] commandArray = Cavazos.getCommandArray(commandJSONArray);
 
-        Random rand = new Random();
-        Deque<String> undoStack = new ArrayDeque<>();
-        Deque<String> redoStack = new ArrayDeque<>();
-
         String input;
 
         // Show menu once at startup
         printMenu();
 
-        // Menu loop: exits when user enters 'q'
+        // Menu loop
         do {
             System.out.print("Enter a command or 'm' to show menu: ");
             input = scanner.nextLine().trim().toLowerCase();
 
             switch (input) {
                 case "i":
-                    int randIndex = rand.nextInt(commandArray.length);
-                    String command = commandArray[randIndex];
-                    undoStack.push(command);
-                    redoStack.clear();
-                    System.out.println("Issued: " + command);
+                    issueCommand(commandArray);
                     break;
                 case "l":
                     Cavazos.print(commandArray);
                     break;
                 case "u":
-                    if (undoStack.isEmpty()) {
-                        System.out.println("No commands to undo.");
-                    } else {
-                        String undone = undoStack.pop();
-                        redoStack.push(undone);
-                        System.out.println("Undone: " + undone);
-                    }
+                    undoCommand();
                     break;
                 case "r":
-                    if (redoStack.isEmpty()) {
-                        System.out.println("No commands to redo.");
-                    } else {
-                        String redone = redoStack.pop();
-                        undoStack.push(redone);
-                        System.out.println("Redone: " + redone);
-                    }
+                    redoCommand();
                     break;
                 case "m":
                     printMenu();
@@ -83,7 +98,7 @@ public class App {
                     System.out.println("Invalid command. Please try again.");
                     break;
             }
-            System.out.println(LINE);
+            System.out.println(line);
         } while (!input.equals("q"));
 
         scanner.close();
